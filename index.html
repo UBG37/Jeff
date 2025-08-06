@@ -661,6 +661,114 @@
 		<img src="https://ubg95.github.io/file/jellydad_hero.jpg" alt="Jellydad Hero">
 		<h3>Jellydad Hero</h3>
 	</div>
+	  <div class="game-card" onclick="openGame('https://ubg95.github.io/file/jellydad_hero.html', 'Jellydad Hero')">
+		<img src="https://ubg95.github.io/file/jellydad_hero.jpg" alt="Jellydad Hero">
+		<h3>Jellydad Hero</h3>
+	</div>
+	  import pygame
+import random
+
+# Initialize Pygame
+pygame.init()
+
+# Screen setup
+WIDTH, HEIGHT = 800, 600
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Funny Shooter 🐔")
+
+# Colors
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+
+# Load assets
+player_img = pygame.image.load("player.png")  # Replace with your own funny character
+chicken_img = pygame.image.load("chicken.png")  # Replace with rubber chicken image
+enemy_img = pygame.image.load("smiley.png")  # Replace with smiley face image
+
+# Game variables
+player_x = WIDTH // 2
+player_y = HEIGHT - 100
+player_speed = 5
+
+chickens = []
+enemies = []
+
+score = 0
+font = pygame.font.SysFont("Comic Sans MS", 30)
+
+# Spawn enemies
+def spawn_enemy():
+    x = random.randint(0, WIDTH - 50)
+    y = random.randint(50, 150)
+    speed = random.randint(2, 5)
+    enemies.append({"x": x, "y": y, "speed": speed})
+
+# Main loop
+clock = pygame.time.Clock()
+running = True
+while running:
+    screen.fill(WHITE)
+
+    # Event handling
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    # Key handling
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT] and player_x > 0:
+        player_x -= player_speed
+    if keys[pygame.K_RIGHT] and player_x < WIDTH - 64:
+        player_x += player_speed
+    if keys[pygame.K_SPACE]:
+        chickens.append({"x": player_x + 25, "y": player_y})
+
+    # Update chickens
+    for chicken in chickens[:]:
+        chicken["y"] -= 10
+        if chicken["y"] < 0:
+            chickens.remove(chicken)
+
+    # Spawn enemies randomly
+    if random.randint(1, 30) == 1:
+        spawn_enemy()
+
+    # Update enemies
+    for enemy in enemies[:]:
+        enemy["y"] += enemy["speed"]
+        if enemy["y"] > HEIGHT:
+            enemies.remove(enemy)
+
+    # Collision detection
+    for chicken in chickens[:]:
+        for enemy in enemies[:]:
+            if abs(chicken["x"] - enemy["x"]) < 40 and abs(chicken["y"] - enemy["y"]) < 40:
+                chickens.remove(chicken)
+                enemies.remove(enemy)
+                score += 1
+                break
+
+    # Draw player
+    screen.blit(player_img, (player_x, player_y))
+
+    # Draw chickens
+    for chicken in chickens:
+        screen.blit(chicken_img, (chicken["x"], chicken["y"]))
+
+    # Draw enemies
+    for enemy in enemies:
+        screen.blit(enemy_img, (enemy["x"], enemy["y"]))
+
+    # Draw score
+    score_text = font.render(f"Score: {score}", True, RED)
+    screen.blit(score_text, (10, 10))
+
+    pygame.display.flip()
+    clock.tick(60)
+
+pygame.quit()
+
+		
   <script>
     function openGame(url, title) {
       var newTab = window.open('about:blank', '_blank');
