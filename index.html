@@ -666,15 +666,7 @@
 		<h3>Jellydad Hero</h3>
 	</div>
 
-    document.getElementById('searchBar').addEventListener('input', function () {
-      const query = this.value.toLowerCase();
-      const cards = document.querySelectorAll('.game-card');
 
-      cards.forEach(card => {
-        const title = card.querySelector('h3').textContent.toLowerCase();
-        card.style.display = title.includes(query) ? 'block' : 'none';
-      });
-    });
   </script>
 <script>
   const searchBar = document.getElementById("searchBar");
